@@ -1,22 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import useTimer from "easytimer-react-hook";
+
+// TODO:
+// - fix sizing on small screens
+// - add alert once countdown is complete
 
 export default function Home() {
   const [stopwatch, isStopwatchAchieved] = useTimer();
   const [updateWhenTargetAchieved, setUpdateWhenTargetAchieved] =
-  useState(true);
+    useState(true);
   const [countdown, isCountdownAchieved] = useTimer({
     updateWhenTargetAchieved,
   });
   const [yinYang, setYinYang] = useState(0);
+  const [timer, setTimer] = useState("00:00:00");
+  const intervalRef = useRef();
 
   stopwatch.start({});
 
   useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setTimer(stopwatch.getTimeValues().toString());
+      console.log(timer);
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  useEffect(() => {
     document.body.style.backgroundColor = yinYang ? "black" : "white";
-    console.log(isCountdownAchieved);
     if (yinYang) {
       stopwatch.pause();
       countdown.start({
@@ -25,10 +39,20 @@ export default function Home() {
         target: { seconds: 0 },
       });
       stopwatch.stop();
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(
+        () => setTimer(countdown.getTimeValues().toString()),
+        1000
+      );
     } else {
       countdown.reset();
       countdown.stop();
       stopwatch.reset();
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(
+        () => setTimer(stopwatch.getTimeValues().toString()),
+        1000
+      );
     }
   }, [yinYang]);
 
@@ -43,10 +67,7 @@ export default function Home() {
           yinYang ? "text-white" : "text-black font-light"
         } transition-all`}
       >
-        {/* TOTO: FIX JITTER */}
-        {yinYang
-          ? countdown.getTimeValues().toString()
-          : stopwatch.getTimeValues().toString()}
+        {timer}
       </div>
       <button
         className={`overflow-hidden w-[8vw] h-[8vw] mt-8 rounded-full px-1 py-1 ${
