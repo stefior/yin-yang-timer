@@ -23,7 +23,6 @@ export default function Home() {
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setTimer(stopwatch.getTimeValues().toString());
-      console.log(timer);
     }, 1000);
 
     return () => clearInterval(intervalRef.current);
@@ -45,6 +44,25 @@ export default function Home() {
         1000
       );
     } else {
+      function showNotification() {
+        const notification = new Notification("Yin/Yang Countdown Complete!", {
+          body: "New stopwatch automatically starting ...",
+          icon: "./favicon.ico"
+        });
+
+        notification.onclick = (e) => {
+          window.focus();
+        }
+      }
+
+      if (Notification.permission !== "denied" && isCountdownAchieved) {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            showNotification();
+          }
+        });
+      }
+
       countdown.reset();
       countdown.stop();
       stopwatch.reset();
@@ -63,14 +81,14 @@ export default function Home() {
   return (
     <>
       <div
-        className={`text-[12vw] ${
+        className={`text-[24vw] md:text-[20vw] lg:text-[12vw] ${
           yinYang ? "text-white" : "text-black font-light"
         } transition-all`}
       >
         {timer}
       </div>
       <button
-        className={`overflow-hidden w-[8vw] h-[8vw] mt-8 rounded-full px-1 py-1 ${
+        className={`overflow-hidden w-20 h-20 md:w-28 md:h-28 lg:w-[8vw] lg:h-[8vw] mt-8 rounded-full px-1 py-1 ${
           yinYang ? "" : "ring-black hover:ring-4"
         } transition-all`}
         onClick={() => {
