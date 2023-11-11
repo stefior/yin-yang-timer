@@ -89,12 +89,12 @@ export default function Home() {
       </div>
       <button
         className={`overflow-hidden w-20 h-20 md:w-28 md:h-28 lg:w-[8vw] lg:h-[8vw] mt-8 rounded-full px-1 py-1 ${
-          yinYang ? "" : "ring-black hover:ring-4"
+          yinYang || timer === "00:00:00" ? "" : "ring-black hover:ring-4"
         } transition-all`}
         onClick={() => {
           yinYang ? setYinYang(0) : setYinYang(1);
         }}
-        disabled={yinYang ? true : false}
+        disabled={yinYang || timer === "00:00:00" ? true : false}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
