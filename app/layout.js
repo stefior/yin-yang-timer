@@ -4,8 +4,8 @@ import { Open_Sans } from 'next/font/google';
 const open_sans = Open_Sans({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Yin Yang Timer',
-  description: '1. Run a stopwatch until you stop it 2. Automatically start a countdown for the length of your stopwatch. 3. Repeat',
+  title: 'Yin/Yang Timer',
+  description: '1) Run a stopwatch until you stop it. 2) Automatically start a countdown for the length of your stopwatch. 3) Repeat.',
 }
 
 export default function RootLayout({ children }) {
